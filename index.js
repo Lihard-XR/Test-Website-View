@@ -104,7 +104,7 @@ const loader = new FBXLoader();
 
 // 주 모델 로드
 loader.load(
-  "../assets/CNC_tool.fbx",
+  "./assets/CNC_tool.fbx",
   (fbx) => {
     toolRoot = fbx;
     toolRoot.scale.set(0.01, 0.01, 0.01);
@@ -136,7 +136,7 @@ loader.load(
 
 // 추가 모델 로드 — 이동 없음, Y+ 회전/정지만
 loader.load(
-  "../assets/CNC_product.fbx",
+  "./assets/CNC_product.fbx",
   (fbx) => {
     productRoot = fbx;
     productRoot.scale.set(0.01, 0.01, 0.01);
@@ -509,3 +509,4 @@ btnWs.addEventListener("click", () => {
 
 // 초기 MOCK 시작
 startMock();
+
