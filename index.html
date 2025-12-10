@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>실시간 CNC 데모</title>
+  <link href="index.css" rel="stylesheet">
+  <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> -->
+</head>
+
+<body>
+  <!-- 타이틀 + 데모 컨트롤(버튼) -->
+  <header>
+    <div class="title">
+      <span class="dot"></span> 
+      실시간 CNC 데모 — 3D 대시보드
+    </div>
+
+    <div class="controls">
+      <span class="hint" style="color:var(--muted); font-size:12px;">데모 모드</span>
+      <!-- MOCK: 가짜 데이터 생성 시작 버튼 -->
+      <button id="btnMock" class="primary">MOCK 시작</button>
+      <!-- WS: WebSocket 연결 시도 버튼 -->
+      <button id="btnWs" class="ghost">WS 연결</button>
+      
+      <input id="wsUrl" type="text" placeholder="ws://localhost:8765/lines/1" style="width:240px" />
+    </div>
+  </header>
+
+  <!-- 메인 2단 레이아웃: 좌(3D), 우(대시보드) -->
+  <div class="layout">
+    <!-- === 좌측: 3D 패널 ============================================== -->
+    <section class="panel">
+      <!-- 툴바: 라인/툴 선택 + 연결상태 -->
+      <div class="toolbar">
+        <div class="row" style="gap: 8px;">
+          <label for="lineSel">라인</label>
+          <select id="lineSel">
+            <option value="1호기">1호기</option>
+            <option value="2호기">2호기</option>
+            <option value="3호기">3호기</option>
+          </select>
+
+          <label for="toolSel">툴</label>
+          <select id="toolSel">
+            <option value="4242">4242</option>
+            <option value="707">707</option>
+            <option value="808">808</option>
+          </select>
+
+          <span class="hint">마우스로 드래그/휠 회전</span>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="row">
+          <!-- 연결 상태(초록/노랑/빨강 점 + 텍스트) -->
+          <span id="connState" class="hint">
+            <span class="statusDot bad"></span>
+            연결 안 됨
+          </span>
+        </div>
+      </div>
+
+      <h3>3D 뷰</h3>
+
+      <!-- 3D 캔버스가 붙는 영역 -->
+      <div class="scene">
+        <div id="threeMount"></div>
+
+        <!-- 좌하단 HUD(현재 라인/툴/상태) -->
+        <div class="hud">
+          <div class="chip mono" id="hudLine">라인: 1호기</div>
+          <div class="chip mono" id="hudTool">툴: 4242</div>
+          <div class="chip mono" id="hudState">상태: idle</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === 우측: 대시보드 패널 ======================================== -->
+    <section class="panel">
+      <h3>대시보드</h3>
+
+      <!-- 상단 KPI 4개 -->
+      <div class="kpiGrid">
+        <div class="kpi">
+          <div class="label">RPM</div>
+          <div class="value" id="rpmVal">0</div>
+          <div class="sub">현재 회전 속도</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Feed</div>
+          <div class="value" id="feedVal">0</div>
+          <div class="sub">이송 속도</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Torque</div>
+          <div class="value" id="torqVal">0</div>
+          <div class="sub">부하 추정</div>
+        </div>
+        <div class="kpi">
+          <div class="label">예측</div>
+          <div class="value" id="predVal">-</div>
+          <div class="sub">권고 교체구간</div>
+        </div>
+      </div>
+
+      <!-- 실시간 시계열 차트 -->
+      <div class="chartWrap">
+        <canvas id="lineChart"></canvas>
+      </div>
+
+      <!-- 데이터 포맷 안내 -->
+      <footerNote>
+        실시간 데이터 포맷 예시:
+        <span class="mono">
+          { "ts": "...", "line": "1호기", "tool_num": 4242, "rpm": 2200, "feed": 154, "troq": 1.0, "state": "cutting" }
+        </span>
+      </footerNote>
+    </section>
+  </div>
+
+  <!-- Chart.js (UMD) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Three.js (ESM via esm.sh to avoid relative import issues) -->
+  <script src="index.js" type="module"></script>
+</body>
+
+</html>

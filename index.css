@@ -1,0 +1,253 @@
+/* =========================================================================
+ * 전체 색상/간격/컴포넌트 스타일을 정의합니다.
+ * 주요 섹션:
+ *  1) CSS 변수(테마)
+ *  2) 전역 기본값/타이포그래피
+ *  3) 헤더/컨트롤 바
+ *  4) 레이아웃(3D 패널 + 대시보드 패널)
+ *  5) 패널/타이틀/HUD/칩
+ *  6) KPI 카드/차트/보조 UI
+ * -------------------------------------------------------------------------
+*/
+
+/* === 1) 테마 변수 ======================================================= */
+:root {
+  --bg: #E5E5E5;       /* 전체 배경 그라데이션 시작 */
+  --panel: #F3F3F3;    /* 입력/버튼 배경 */
+  --muted: #000000;    /* 보조 텍스트 색 */
+  --fg: #000000;       /* 기본 전경 텍스트 색 */
+  --brand: #0088ff;    /* 포커스/링크 색 */
+  --accent: #00ff2a;   /* 포인트 색(상태 점 등) */
+  --danger: #ff0000;   /* 경고/오류 색 */
+  --card: #F3F3F3;     /* 카드형 배경 */
+  --border: #1f2a36;   /* 카드/패널 경계선 */
+}
+
+/* === 2) 전역 기본값/타이포 ============================================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+  /* 시스템 폰트 우선 + 한글 가독성 좋은 폰트 */
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+               "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+/* === 3) 헤더/컨트롤 바 ================================================== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);   /* 반투명 배경 + 블러 */
+  backdrop-filter: blur(6px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.title {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.title .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; }
+
+/* 입력/버튼 공통 스타일 */
+select, button, input[type="text"] {
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 14px;
+  outline: none;
+  min-height: 36px; /* 터치 타겟 높이 확보 */
+}
+button { cursor: pointer; }
+button.primary {
+  background: linear-gradient(180deg, #1a7bff, #1261d1);
+  border: none;
+}
+button.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+/* === 4) 레이아웃(좌: 3D, 우: 대시보드) ================================ */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) 420px; /* 좌우 패널 비율 */
+  gap: 16px;
+  padding: 16px;
+  height: calc(100% - 62px); /* 헤더 높이 제외 */
+}
+
+/* === 5) 패널/타이틀/HUD/칩 ============================================= */
+.panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.panel h3 {
+  margin: 0; padding: 12px 14px;
+  font-size: 14px; letter-spacing: 0.4px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+/* 3D 장면 영역(툴바 밑 공간) */
+.scene { height: calc(100% - 46px); position: relative; min-height: 320px; }
+
+/* Three.js 캔버스가 꽉 차도록 절대 위치 */
+#threeMount { position: absolute; inset: 0; }
+
+/* 좌측 하단 HUD 칩 */
+.hud {
+  position: absolute; left: 12px; bottom: 12px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+
+.chip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  backdrop-filter: blur(4px);
+}
+
+/* === 6) KPI 카드/차트/기타 ============================================= */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px; padding: 12px;
+}
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.kpi .label { color: var(--muted); font-size: 12px; }
+.kpi .value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+.kpi .sub   { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+.chartWrap { padding: 6px 12px 12px; }
+canvas#lineChart { width: 100%; height: 240px; }
+
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.spacer { flex: 1; }
+
+/* 푸터 유사 안내문 */
+footerNote {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 8px 0 16px;
+}
+
+/* 연결 상태 점: ok/warn/bad */
+.statusDot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.ok   { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.warn { background: #ffd166;      box-shadow: 0 0 10px #ffd166; }
+.bad  { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+
+/* 상단 툴바 */
+.toolbar { padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.toolbar .hint { color: var(--muted); font-size: 12px; }
+
+/* 모노스페이스 폰트 */
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+}
+
+/* 링크 기본 색상 */
+a.link { color: var(--brand); text-decoration: none; }
+
+
+/* ========================================================================
+ * 반응형: 태블릿 이하(≤ 1024px)
+ * - 헤더 정렬/컨트롤 간격 확대, 버튼 터치 크기 증가
+ * ===================================================================== */
+@media (max-width: 1024px) {
+  header { align-items: flex-start; }
+  .controls { flex-wrap: wrap; width: 100%; justify-content: flex-end; }
+  .controls > * { flex: 0 0 auto; }
+  button, select, input[type="text"] { min-height: 42px; }
+  .layout { gap: 12px; padding: 12px; }
+  .panel h3 { padding: 10px 12px; }
+  .scene { min-height: 340px; }
+  canvas#lineChart { height: 220px; }
+}
+
+/* ========================================================================
+ * 반응형: 모바일 가로/작은 화면(≤ 900px)
+ * - 1열 스택, 패널 높이 자동, 차트/3D 높이 조정
+ * ===================================================================== */
+@media (max-width: 900px) {
+  .title { flex: 1 0 100%; }
+  .controls { justify-content: space-between; }
+  .layout {
+    grid-template-columns: 1fr; /* 한 줄 스택 */
+    height: auto;               /* 패널 내용 높이에 맞춤 */
+  }
+  .panel { border-radius: 16px; }
+  .scene { height: 360px; min-height: 300px; } /* 3D 뷰 고정 높이로 안정화 */
+  canvas#lineChart { height: 200px; }
+  .kpiGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ========================================================================
+ * 반응형: 모바일 세로(≤ 480px)
+ * - 컨트롤 전체폭, KPI 1열, 여백/글자 크기 미세 조정
+ * ===================================================================== */
+@media (max-width: 480px) {
+  header { padding: 12px; gap: 8px; }
+  .controls { gap: 8px; }
+  .controls button,
+  .controls select,
+  .controls input[type="text"] { flex: 1 0 100%; width: 100%; }
+  .layout { padding: 10px; gap: 10px; }
+  .panel h3 { font-size: 13px; }
+  .scene { height: 320px; min-height: 260px; }
+  .kpiGrid { grid-template-columns: 1fr; }
+  .kpi .value { font-size: 20px; }
+  .chip { font-size: 11px; }
+  canvas#lineChart { height: 180px; }
+}
+
+/* ========================================================================
+ * 방향 별 최적화
+ * - 세로(보통 휴대폰): 3D/차트 영역 여유 높이 확보
+ * - 가로(휴대폰 옆으로): 3D를 좀 더 넓게
+ * ===================================================================== */
+@media (orientation: portrait) {
+  .scene { min-height: 340px; }
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .scene { height: 280px; min-height: 240px; }
+}
